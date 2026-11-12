@@ -5,13 +5,28 @@ function Projects({ onAdd }) {
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [error, setError] = useState("");
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!title.trim()) return;
+        if (!title.trim() && !description.trim()) {
+            setError("Please enter a title and a description.")
+            return;
+        };
 
-        onAdd([{ id: Date.now(), title: title.trim(), description: description.trim() }]);
+        if (!title.trim()) {
+            setError("Please enter a project title.");
+            return;
+        }
+
+        if (!description.trim()) {
+            setError("Please enter a project description.");
+            return;
+        }
+
+        setError("");
+        onAdd({ id: Date.now(), title: title.trim(), description: description.trim() });
         setTitle("");
         setDescription("");
 
@@ -37,6 +52,10 @@ function Projects({ onAdd }) {
                     rows={4}
                     className="border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-200"
                 />
+
+                {error && (
+                    <p role="alert" className="text-sm text-red-400">{error}</p>
+                )}
 
                 <button 
                     className="self-start border border-slate-200 rounded-md w-24 cursor-pointer hover:bg-slate-300 transition "
